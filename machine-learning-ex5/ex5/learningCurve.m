@@ -51,15 +51,26 @@ error_val   = zeros(m, 1);
 %       end
 %
 
-% ---------------------- Sample Solution ----------------------
+% Initialize Theta
+initial_theta = zeros(size(X, 2), 1); 
+
+% Create "short hand" for the cost function to be minimized
+costFunction = @(t) linearRegCostFunction(X, y, t, lambda);
+
+% Now, costFunction is a function that takes in only one argument
+options = optimset('MaxIter', 200, 'GradObj', 'on');
+
+% Minimize using fmincg
+theta = fmincg(costFunction, initial_theta, options);
 
 
-
-
-
-
-
-% -------------------------------------------------------------
+for i=1:m
+    % Obtain theta from training set
+    theta = trainLinearReg(X(1:i, :), y(1:i), lambda);
+    % Compute training and validation error
+    error_train(i) = linearRegCostFunction(X(1:i, :), y(1:i), theta, 0);
+    error_val(i) = linearRegCostFunction(Xval, yval, theta, 0);
+end
 
 % =========================================================================
 
